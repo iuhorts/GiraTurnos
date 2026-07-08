@@ -24,7 +24,10 @@ class DriveSyncService extends ChangeNotifier {
 
   Future<bool> signIn() async {
     try {
-      _account = await GoogleSignIn(scopes: _scopes).signIn();
+      _account = await GoogleSignIn(
+        scopes: _scopes,
+        clientId: '298754061201-a9nf02acdtnta3e5mmnqje0sjm73c3cv.apps.googleusercontent.com',
+      ).signIn();
       if (_account == null) return false;
 
       final headers = await _account!.authHeaders;
