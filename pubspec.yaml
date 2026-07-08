@@ -37,5 +37,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-  assets:
-    - assets/
+  # assets commented out until actual files are added
+  # assets:
+  #   - assets/
