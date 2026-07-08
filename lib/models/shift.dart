@@ -76,6 +76,7 @@ class Shift {
     DateTime? endTime,
     double? extraHours,
     DateTime? createdAt,
+    DateTime? updatedAt,
   }) =>
       Shift(
         id: id ?? this.id,
@@ -87,5 +88,6 @@ class Shift {
         endTime: endTime ?? this.endTime,
         extraHours: extraHours ?? this.extraHours,
         createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
       );
 }
