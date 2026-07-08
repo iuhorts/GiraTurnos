@@ -1,0 +1,4 @@
+-keep class com.turnosfamilia.app.** { *; }
+-keep class * extends io.flutter.embedding.android.FlutterActivity
+-dontwarn com.google.**
+-dontwarn io.flutter.**

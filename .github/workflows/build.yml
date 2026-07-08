@@ -1,0 +1,72 @@
+name: Build APK
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.27.0'
+          channel: 'stable'
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Create local.properties
+        run: |
+          echo "flutter.sdk=${{ env.FLUTTER_ROOT }}" > android/local.properties
+          echo "flutter.buildMode=release" >> android/local.properties
+          echo "flutter.versionCode=1" >> android/local.properties
+          echo "flutter.versionName=1.0.0" >> android/local.properties
+
+      - name: Build APK
+        run: flutter build apk --release --split-per-abi
+
+      - name: Upload APKs
+        uses: actions/upload-artifact@v4
+        with:
+          name: turnosfamilia-apk
+          path: build/app/outputs/flutter-apk/*.apk
+          if-no-files-found: error
+
+      - name: Upload universal APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: turnosfamilia-universal-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+          if-no-files-found: warn
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download all APKs
+        uses: actions/download-artifact@v4
+        with:
+          path: apks
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            apks/turnosfamilia-apk/*.apk
+            apks/turnosfamilia-universal-apk/*.apk
+          generate_release_notes: true

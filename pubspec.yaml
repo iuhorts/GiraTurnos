@@ -1,0 +1,42 @@
+name: turnosfamilia
+description: Gestor de turnos laborales con sincronización Google Drive. Sin publicidad.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.0.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  table_calendar: ^3.1.2
+  sqflite: ^2.3.3+2
+  path_provider: ^2.1.4
+  path: ^1.9.0
+  provider: ^6.1.2
+  google_sign_in: ^6.2.2
+  googleapis: ^13.2.0
+  googleapis_auth: ^1.6.0
+  extension_google_sign_in_as_googleapis_auth: ^2.0.4
+  http: ^1.2.2
+  intl: ^0.19.0
+  pdf: ^3.11.1
+  printing: ^5.13.4
+  csv: ^6.0.0
+  share_plus: ^10.1.3
+  home_widget: ^0.7.0
+  flutter_colorpicker: ^1.1.0
+  uuid: ^4.5.1
+  collection: ^1.18.0
+  file_picker: ^8.1.6
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/
