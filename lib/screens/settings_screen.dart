@@ -97,7 +97,7 @@ class SettingsScreen extends StatelessWidget {
               child: Column(
                 children: [
                   ListTile(
-                    leading: const Icon(Icons.json),
+                    leading: const Icon(Icons.data_object),
                     title: const Text('Exportar JSON'),
                     subtitle: const Text('Copia de seguridad completa'),
                     trailing: const Icon(Icons.share),

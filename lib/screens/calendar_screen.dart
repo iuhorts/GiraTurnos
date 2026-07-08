@@ -115,7 +115,7 @@ class _Calendar extends StatelessWidget {
           );
         },
       ),
-      headerStyle: const HeaderStyle(
+      headerStyle: HeaderStyle(
         formatButtonVisible: false,
         titleCentered: true,
         titleTextFormatter: (date, locale) =>

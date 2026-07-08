@@ -2,7 +2,8 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:googleapis/drive/v3.dart' as drive;
-import 'package:extension_google_sign_in_as_googleapis_auth/extension_google_sign_in_as_googleapis_auth.dart';
+import 'package:googleapis_auth/googleapis_auth.dart' as auth;
+import 'package:http/http.dart' as http;
 import 'database_service.dart';
 
 class DriveSyncService extends ChangeNotifier {
@@ -11,6 +12,7 @@ class DriveSyncService extends ChangeNotifier {
 
   GoogleSignInAccount? _account;
   drive.DriveApi? _driveApi;
+  auth.AuthClient? _authClient;
   bool _isSyncing = false;
   bool _isSignedIn = false;
   String? _lastError;
@@ -25,10 +27,19 @@ class DriveSyncService extends ChangeNotifier {
       _account = await GoogleSignIn(scopes: _scopes).signIn();
       if (_account == null) return false;
 
-      final client = await _account!.authenticatedClient();
-      if (client == null) return false;
+      final headers = await _account!.authHeaders;
+      final token = headers['Authorization']?.replaceFirst('Bearer ', '');
+      if (token == null) return false;
 
-      _driveApi = drive.DriveApi(client);
+      final credentials = auth.AccessCredentials(
+        auth.AccessToken('Bearer', token, DateTime.now().add(const Duration(hours: 1))),
+        null,
+        _scopes,
+      );
+
+      final client = http.Client();
+      _authClient = auth.authenticatedClient(client, credentials);
+      _driveApi = drive.DriveApi(_authClient!);
       _isSignedIn = true;
       _lastError = null;
       notifyListeners();
@@ -41,9 +52,11 @@ class DriveSyncService extends ChangeNotifier {
   }
 
   Future<void> signOut() async {
+    _authClient?.close();
     await GoogleSignIn().signOut();
     _account = null;
     _driveApi = null;
+    _authClient = null;
     _isSignedIn = false;
     notifyListeners();
   }
@@ -135,5 +148,11 @@ class DriveSyncService extends ChangeNotifier {
     try {
       await pullFromDrive();
     } catch (_) {}
+  }
+
+  @override
+  void dispose() {
+    _authClient?.close();
+    super.dispose();
   }
 }
