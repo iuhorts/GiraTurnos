@@ -18,8 +18,7 @@ class CalendarScreen extends StatelessWidget {
         return Column(
           children: [
             _ProfileSelector(provider: provider),
-            _Calendar(provider: provider),
-            const SizedBox(height: 8),
+            Expanded(child: _Calendar(provider: provider)),
             _Legend(provider: provider),
             const Divider(height: 1),
             _DayInfo(provider: provider),
